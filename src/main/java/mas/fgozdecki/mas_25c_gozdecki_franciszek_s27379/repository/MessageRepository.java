@@ -9,6 +9,6 @@ import org.springframework.data.repository.CrudRepository;
 import java.util.Optional;
 
 public interface MessageRepository extends CrudRepository<Message, Long> {
-    public Message findMessageByAuthorAndTextChannel(Account author, TextChannel textChannel);
-
+    public Message findMessageByAuthorAndChannel(Account author,
+                                                 TextChannel channel);
 }

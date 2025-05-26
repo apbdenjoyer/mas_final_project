@@ -28,23 +28,13 @@ public class TextChannelService {
     public void addMessageToTextChannel(Account author, TextChannel textChannel, String contents) {
         messageRepository.save(Message.builder()
                 .author(author)
-                .textChannel(textChannel)
+                .channel(textChannel)
                 .contents(contents)
                 .build());
     }
 
     public void deleteMessageFromTextChannel(Message message) {
         messageRepository.delete(message);
-    }
-
-    public void setSlowmode(Long textChannelId, Server server, Integer slowmode) {
-        Optional<TextChannel> channel = textChannelRepository.findByIdAndServer(textChannelId, server);
-
-        if (channel.isPresent()) {
-            channel.get().setSlowmode(slowmode);
-        } else {
-            throw new EntityNotFoundException("TextChannel with id " + textChannelId + " not found");
-        }
     }
 
 

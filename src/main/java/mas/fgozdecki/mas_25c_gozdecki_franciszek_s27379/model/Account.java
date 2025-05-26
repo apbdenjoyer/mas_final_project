@@ -6,14 +6,11 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
-import mas.fgozdecki.mas_25c_gozdecki_franciszek_s27379.repository.MembershipRepository;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.validator.constraints.Length;
-import org.springframework.boot.autoconfigure.batch.BatchProperties;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
-import java.util.Optional;
 import java.util.Set;
 
 @Entity
@@ -30,7 +27,8 @@ public abstract class Account {
     private Long id;
 
     @NotBlank(message = "Login cannot be blank")
-    @Length(min = 5, max = 20, message = "Login must be between 5 and 20 characters")
+    @Length(min = 1, max = 20, message = "Login must be between 1 and 20 " +
+            "characters")
     private String login;
 
     @NotNull
@@ -47,38 +45,6 @@ public abstract class Account {
     @EqualsAndHashCode.Exclude
     @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE)
     private Set<Membership> memberships = new HashSet<>();
-
-
-    public void addToServer(Server s) {
-        if (s == null) {
-            throw new IllegalArgumentException("Server cannot be null");
-        }
-
-        for (Membership m : memberships) {
-            if (m.getServer().equals(s)) {
-                /*Such a membership already exists*/
-                throw new IllegalArgumentException("User is already in this server");
-            }
-        }
-
-        Membership membership = new Membership(this, s);
-    }
-
-    public void removeFromServer(Server s) {
-        if (s == null) {
-            throw new IllegalArgumentException("Server cannot be null");
-        }
-
-        for (Membership m : memberships) {
-            if (m.getServer().equals(s) && m.getLeaveDate() != null) {
-                m.setLeaveDate(LocalDateTime.now());
-            }
-        }
-    }
-
-    public void addMembership(Membership membership) {
-        this.memberships.add(membership);
-    }
 
     public String getLogin() {
         return login;

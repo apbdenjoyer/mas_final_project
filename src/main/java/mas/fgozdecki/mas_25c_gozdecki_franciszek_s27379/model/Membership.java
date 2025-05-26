@@ -7,6 +7,7 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Entity
 @Data
@@ -14,6 +15,8 @@ import java.time.LocalDateTime;
         "server_id", "joinDate"}))
 @ToString()
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Membership {
 
     @Id
@@ -42,22 +45,11 @@ public class Membership {
     @EqualsAndHashCode.Exclude
     private Role role;
 
-    @ManyToOne
-    @JoinColumn(name = "voice_channel_id")
-    @OnDelete(action = OnDeleteAction.SET_NULL)
-    private VoiceChannel voiceChannel;
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    @OneToMany(mappedBy = "participant", cascade = CascadeType.REMOVE)
+    private Set<Participation> participations;
 
-
-    public Membership(Account member, Server server) {
-        this.member = member;
-        this.server = server;
-        this.joinDate = LocalDateTime.now();
-
-        server.addMembership(this);
-        member.addMembership(this);
-    }
-
-    public Membership() {}
 
     public Account getMember() {
         return member;

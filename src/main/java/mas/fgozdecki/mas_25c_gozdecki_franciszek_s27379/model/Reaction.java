@@ -36,6 +36,4 @@ public class Reaction {
 
     @NotNull
     private LocalDateTime createdAt;
-
-
 }

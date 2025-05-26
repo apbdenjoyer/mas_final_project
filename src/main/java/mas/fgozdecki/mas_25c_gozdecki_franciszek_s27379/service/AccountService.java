@@ -22,7 +22,10 @@ public class AccountService {
     private final MessageRepository messageRepository;
 
     public void addAccountToServer(Account account, Server server) {
-        membershipRepository.save(new Membership(account, server));
+        membershipRepository.save(Membership.builder()
+                .server(server)
+                .member(account)
+                .build());
     }
 
     public void removeAccountFromServer(Account account, Server server) {
@@ -40,7 +43,7 @@ public class AccountService {
         messageRepository.save(Message
                 .builder()
                 .author(author)
-                .textChannel(textChannel)
+                .channel(textChannel)
                 .contents(contents)
                 .build());
     }

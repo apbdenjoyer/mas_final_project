@@ -28,7 +28,7 @@ public class Message {
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "channel_id", nullable = false, updatable = false)
-    private TextChannel textChannel;
+    private TextChannel channel;
 
     @OneToMany(mappedBy = "message", cascade = CascadeType.REMOVE)
     @ToString.Exclude
@@ -43,28 +43,4 @@ public class Message {
 
     @NotNull
     private LocalDateTime createdAt;
-
-    public void addReaction(User user, Emoji emoji) {
-        Reaction reaction = Reaction.builder()
-                .message(this)
-                .user(user)
-                .emoji(emoji)
-                .createdAt(LocalDateTime.now())
-                .build();
-
-        user.getReactions().add(reaction);
-        emoji.getReactions().add(reaction);
-    }
-
-    public void removeReaction(Reaction r) {
-        if (r == null) {
-            throw new IllegalArgumentException("Reaction cannot be null");
-        }
-
-        User user = r.getUser();
-        Emoji emoji = r.getEmoji();
-        user.getReactions().remove(r);
-        emoji.getReactions().remove(r);
-        reactions.remove(r);
-    }
 }

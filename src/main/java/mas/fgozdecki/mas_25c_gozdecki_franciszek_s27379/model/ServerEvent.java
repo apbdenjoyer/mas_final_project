@@ -23,7 +23,7 @@ public class ServerEvent {
     private Long id;
 
     @NotBlank
-    @Length(min=5, max=64)
+    @Length(min=1, max=64)
     private String name;
 
     @Length(max=500)

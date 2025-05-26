@@ -6,6 +6,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.validator.constraints.Length;
 
 import java.util.Set;
@@ -44,10 +46,6 @@ public class User extends Account{
     private Set<Subscription>
             subscriptions;
 
-    @ToString.Exclude
-    @EqualsAndHashCode.Exclude
-    @OneToMany(mappedBy = "participant", cascade = CascadeType.REMOVE)
-    private Set<Participation> participations;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     @ToString.Exclude
@@ -58,4 +56,9 @@ public class User extends Account{
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     private Set<Bot> createdBots;
+
+    @ManyToOne
+    @JoinColumn(name = "voice_channel_id")
+    @OnDelete(action = OnDeleteAction.SET_NULL)
+    private VoiceChannel voiceChannel;
 }

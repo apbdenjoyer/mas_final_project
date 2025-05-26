@@ -27,7 +27,7 @@ public class Participation {
     @JoinColumn(name = "participant_id", referencedColumnName = "id", nullable =
             false)
     @NotNull
-    private User participant;
+    private Membership participant;
 
     @ManyToOne
     @JoinColumn(name = "event_id", referencedColumnName = "id", nullable = false)

@@ -23,18 +23,19 @@ public class Subscription {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+
     public enum SubscriptionLevel {
         NONE(25, 0.00),
         CLASSIC(50, 19.99),
         PRO(250, 29.99);
 
-        SubscriptionLevel(Integer serverCountLimit, Double price) {
+        SubscriptionLevel(Integer serverCountLimit, Double monthlyPrice) {
             this.serverCountLimit = serverCountLimit;
-            this.price = price;
+            this.monthlyPrice = monthlyPrice;
         }
 
         private final Integer serverCountLimit;
-        private final Double price;
+        private final Double monthlyPrice;
     }
 
     @NotNull
