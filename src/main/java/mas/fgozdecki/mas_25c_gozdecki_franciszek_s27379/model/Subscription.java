@@ -7,7 +7,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 import java.time.LocalDateTime;
 
 @Entity
@@ -18,9 +17,25 @@ import java.time.LocalDateTime;
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = {"user_id",
         "startDate"}))
 public class Subscription {
+
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    public enum SubscriptionLevel {
+        NONE(25, 4.99),
+        CLASSIC(50, 7.99),
+        PRO(250, 9.99);
+
+        SubscriptionLevel(Integer embedMbLimit, Double price) {
+            this.embedMbLimit = embedMbLimit;
+            this.price = price;
+        }
+
+        private final Integer embedMbLimit;
+        private final Double price;
+    }
 
     @NotNull
     @Enumerated(EnumType.STRING)

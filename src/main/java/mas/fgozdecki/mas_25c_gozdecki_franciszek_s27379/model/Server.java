@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import org.hibernate.validator.constraints.Length;
 
+import java.util.Collections;
 import java.util.Set;
 
 @Entity
@@ -40,8 +41,66 @@ public class Server {
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     @OneToMany(mappedBy = "server", cascade = CascadeType.REMOVE)
-    private Set<Membership> membershipHistory;
+    private Set<Membership> memberships;
 
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    @OneToMany(mappedBy = "server", cascade = CascadeType.REMOVE)
+    private Set<ServerEvent> events;
 
+    public Long getId() {
+        return id;
+    }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public User getOwner() {
+        return owner;
+    }
+
+    public void setOwner(User owner) {
+        this.owner = owner;
+    }
+
+    public Set<Channel> getChannels() {
+        return channels;
+    }
+
+    public void setChannels(Set<Channel> channels) {
+        this.channels = channels;
+    }
+
+    public Set<Emoji> getEmojis() {
+        return emojis;
+    }
+
+    public void setEmojis(Set<Emoji> emojis) {
+        this.emojis = emojis;
+    }
+
+    public Set<Membership> getMemberships() {
+        return memberships;
+    }
+
+    public void setMemberships(Set<Membership> memberships) {
+        this.memberships = memberships;
+    }
+
+    public Set<ServerEvent> getEvents() {
+        return events;
+    }
+
+    public void setEvents(Set<ServerEvent> events) {
+        this.events = events;
+    }
 }

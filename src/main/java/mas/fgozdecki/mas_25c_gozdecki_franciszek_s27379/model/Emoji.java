@@ -9,6 +9,8 @@ import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.hibernate.validator.constraints.Length;
 
+import java.util.Set;
+
 @Entity
 @Data
 @NoArgsConstructor
@@ -33,4 +35,10 @@ public class Emoji {
     @ManyToOne(optional = false)
     @JoinColumn(name = "server_id", nullable = false, updatable = false)
     private Server server;
+
+    @OneToMany(mappedBy = "emoji", cascade = CascadeType.REMOVE)
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    private Set<Reaction> reactions;
+
 }

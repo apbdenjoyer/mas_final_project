@@ -8,7 +8,6 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.validator.constraints.Length;
 
-import java.time.LocalDateTime;
 import java.util.Set;
 
 @Entity
@@ -17,6 +16,7 @@ import java.util.Set;
 @AllArgsConstructor
 @SuperBuilder
 @Table(name="users")
+@ToString()
 public class User extends Account{
 
     @NotBlank(message = "Email cannot be blank")
@@ -32,7 +32,6 @@ public class User extends Account{
     )
     private String password;
 
-
     @OneToMany(mappedBy = "owner", cascade = CascadeType.REMOVE)
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
@@ -45,10 +44,18 @@ public class User extends Account{
     private Set<Subscription>
             subscriptions;
 
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    @OneToMany(mappedBy = "participant", cascade = CascadeType.REMOVE)
+    private Set<Participation> participations;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    private Set<Reaction> reactions;
+
     @OneToMany(mappedBy = "author", cascade=CascadeType.REMOVE, fetch = FetchType.LAZY)
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
-    private Set<Bot> bots;
-
-
+    private Set<Bot> createdBots;
 }

@@ -23,11 +23,6 @@ public abstract class Channel {
     @JoinColumn(name = "server_id", nullable = false, updatable = false)
     private Server server;
 
-    @OneToMany(mappedBy = "channel", cascade = CascadeType.REMOVE)
-    @ToString.Exclude
-    @EqualsAndHashCode.Exclude
-    private Set<Message> messages;
-
     private String name;
 
     @Min(value = 0, message = "Required access level cannot be negative")
