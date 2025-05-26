@@ -27,12 +27,4 @@ public abstract class Channel {
 
     @Min(value = 0, message = "Required access level cannot be negative")
     private Integer requiredAccessLevel;
-
-    public boolean canUserAccess(Membership membership) {
-        if (membership == null || membership.getRole() == null) {
-            return false;
-        }
-
-        return membership.getRole().getAccessLevel() >= this.requiredAccessLevel;
-    }
 }

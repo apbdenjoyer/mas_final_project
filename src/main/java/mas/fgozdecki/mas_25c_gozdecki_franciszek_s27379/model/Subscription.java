@@ -24,16 +24,16 @@ public class Subscription {
     private Long id;
 
     public enum SubscriptionLevel {
-        NONE(25, 4.99),
-        CLASSIC(50, 7.99),
-        PRO(250, 9.99);
+        NONE(25, 0.00),
+        CLASSIC(50, 19.99),
+        PRO(250, 29.99);
 
-        SubscriptionLevel(Integer embedMbLimit, Double price) {
-            this.embedMbLimit = embedMbLimit;
+        SubscriptionLevel(Integer serverCountLimit, Double price) {
+            this.serverCountLimit = serverCountLimit;
             this.price = price;
         }
 
-        private final Integer embedMbLimit;
+        private final Integer serverCountLimit;
         private final Double price;
     }
 

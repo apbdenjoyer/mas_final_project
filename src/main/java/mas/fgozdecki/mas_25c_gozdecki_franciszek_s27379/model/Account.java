@@ -9,6 +9,7 @@ import lombok.experimental.SuperBuilder;
 import mas.fgozdecki.mas_25c_gozdecki_franciszek_s27379.repository.MembershipRepository;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.validator.constraints.Length;
+import org.springframework.boot.autoconfigure.batch.BatchProperties;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -63,11 +64,30 @@ public abstract class Account {
         Membership membership = new Membership(this, s);
     }
 
+    public void removeFromServer(Server s) {
+        if (s == null) {
+            throw new IllegalArgumentException("Server cannot be null");
+        }
+
+        for (Membership m : memberships) {
+            if (m.getServer().equals(s) && m.getLeaveDate() != null) {
+                m.setLeaveDate(LocalDateTime.now());
+            }
+        }
+    }
+
+    public void addMembership(Membership membership) {
+        this.memberships.add(membership);
+    }
+
     public String getLogin() {
         return login;
     }
 
     public void setLogin(String login) {
+        if (login == null) {
+            throw new IllegalArgumentException("Login cannot be null");
+        }
         this.login = login;
     }
 
@@ -75,7 +95,7 @@ public abstract class Account {
         return registrationDate;
     }
 
-    public void setRegistrationDate(LocalDateTime registrationDate) {
+    private void setRegistrationDate(LocalDateTime registrationDate) {
         this.registrationDate = registrationDate;
     }
 
@@ -84,6 +104,9 @@ public abstract class Account {
     }
 
     public void setMessages(Set<Message> messages) {
+        if (messages == null) {
+            throw new IllegalArgumentException("Messages cannot be null");
+        }
         this.messages = messages;
     }
 
@@ -92,6 +115,10 @@ public abstract class Account {
     }
 
     public void setMemberships(Set<Membership> memberships) {
+        if (memberships == null) {
+            throw new IllegalArgumentException("Memberships cannot be null");
+        }
         this.memberships = memberships;
     }
+
 }

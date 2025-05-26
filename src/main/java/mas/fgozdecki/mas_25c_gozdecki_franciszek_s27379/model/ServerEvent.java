@@ -48,8 +48,7 @@ public class ServerEvent {
     private EventStatus status;
 
     public enum EventStatus {
-        SCHEDULED, ONGOING, COMPLETED, CANCELLED
-    }
+        SCHEDULED, ONGOING, COMPLETED}
 
 
 }

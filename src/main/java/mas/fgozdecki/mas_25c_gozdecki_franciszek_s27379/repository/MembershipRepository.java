@@ -7,4 +7,6 @@ import org.springframework.data.repository.CrudRepository;
 
 public interface MembershipRepository extends CrudRepository<Membership,Long> {
     public Membership findByMemberAndServer(Account member, Server server);
+
+    Membership findByMemberAndServerAndLeaveDateIsNull(Account account, Server server);
 }

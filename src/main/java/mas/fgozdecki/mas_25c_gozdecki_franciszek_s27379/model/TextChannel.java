@@ -17,13 +17,8 @@ import java.util.Set;
 @SuperBuilder
 public class TextChannel extends Channel {
 
-    @Min(0)
-    @NotNull
-    private Integer slowmode;
-
     @OneToMany(mappedBy = "channel", cascade = CascadeType.REMOVE)
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     private Set<Message> messages;
-
 }

@@ -3,6 +3,8 @@ package mas.fgozdecki.mas_25c_gozdecki_franciszek_s27379.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.LocalDateTime;
 
@@ -11,6 +13,7 @@ import java.time.LocalDateTime;
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = {"member_id",
         "server_id", "joinDate"}))
 @ToString()
+@Builder
 public class Membership {
 
     @Id
@@ -39,13 +42,19 @@ public class Membership {
     @EqualsAndHashCode.Exclude
     private Role role;
 
+    @ManyToOne
+    @JoinColumn(name = "voice_channel_id")
+    @OnDelete(action = OnDeleteAction.SET_NULL)
+    private VoiceChannel voiceChannel;
+
+
     public Membership(Account member, Server server) {
         this.member = member;
         this.server = server;
         this.joinDate = LocalDateTime.now();
 
-        server.getMemberships().add(this);
-        member.getMemberships().add(this);
+        server.addMembership(this);
+        member.addMembership(this);
     }
 
     public Membership() {}
@@ -109,4 +118,11 @@ public class Membership {
         }
         this.role = role;
     }
+
+    public Account getUser() {
+        return member;
+    }
+
+
+
 }
