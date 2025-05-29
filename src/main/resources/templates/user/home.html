@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Chat Home</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        h1, h2, h3 {
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .error {
+            color: red;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+        
+        .user-info {
+            text-align: right;
+            margin-bottom: 20px;
+        }
+        
+        /* Chat layout styles */
+        .container {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .sidebar {
+            width: 200px;
+            border-right: 1px solid #ddd;
+            padding-right: 15px;
+        }
+        
+        .main-content {
+            flex: 1;
+        }
+        
+        .server-list, .channel-list {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .server-list li, .channel-list li {
+            padding: 8px;
+            margin-bottom: 5px;
+            background-color: #f5f5f5;
+            border-radius: 4px;
+        }
+        
+        .server-list li.active, .channel-list li.active {
+            background-color: #e0e0e0;
+            font-weight: bold;
+        }
+        
+        .server-list a, .channel-list a {
+            text-decoration: none;
+            color: #333;
+            display: block;
+        }
+        
+        .message {
+            padding: 10px;
+            margin-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .message-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+        
+        .message-author {
+            font-weight: bold;
+        }
+        
+        .message-time {
+            color: #888;
+            font-size: 12px;
+        }
+        
+        .message-content {
+            margin-top: 5px;
+        }
+        
+        .message-form {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+            align-items: flex-end;
+        }
+        
+        .message-input {
+            flex: 1;
+            margin-bottom: 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Chat Dashboard</h1>
+    
+    <!-- Display error message if any -->
+    <div class="error" th:if="${error}" th:text="${error}"></div>
+    
+    <!-- User info display -->
+    <div th:if="${currentUser}" class="user-info">
+        <p>Logged in as: <span th:text="${currentUser.login}">Username</span></p>
+    </div>
+    
+     <div class="container">
+        <div class="sidebar">
+            <h2>Servers</h2>
+            <ul class="server-list" th:if="${servers != null && !#lists.isEmpty(servers)}">
+                <li th:each="server : ${servers}" 
+                    th:class="${currentServer != null && currentServer.id == server.id ? 'active' : ''}">
+                    <a th:href="@{/user(serverId=${server.id})}" 
+                       th:text="${server.name}">Server Name</a>
+                </li>
+            </ul>
+            <p th:if="${servers == null || #lists.isEmpty(servers)}">No servers available</p>
+            
+            <div th:if="${currentServer != null}">
+                <h2>Channels</h2>
+                <ul class="channel-list" th:if="${channels != null && !#lists.isEmpty(channels)}">
+                    <li th:each="channel : ${channels}" 
+                        th:class="${currentChannel != null && currentChannel.id == channel.id ? 'active' : ''}">
+                        <a th:href="@{/user(serverId=${currentServer.id},channelId=${channel.id})}" 
+                           th:text="${channel.name}">Channel Name</a>
+                    </li>
+                </ul>
+                <p th:if="${channels == null || #lists.isEmpty(channels)}">No channels available</p>
+            </div>
+        </div>
+        
+        <div class="main-content">
+            <h2 th:if="${currentChannel != null}" th:text="${'#' + currentChannel.name}">Channel Name</h2>
+            <h2 th:unless="${currentChannel != null}">Select a channel</h2>
+
+            <div class="messages" th:if="${currentChannel != null}">
+                <div th:if="${messages != null && !#lists.isEmpty(messages)}">
+                    <div class="message" th:each="message : ${messages}">
+                        <div class="message-header">
+                            <span class="message-author" th:text="${message.author.login}">Username</span>
+                            <span class="message-time" th:text="${#temporals.format(message.createdAt, 'dd MMM yyyy, HH:mm')}">Time</span>
+                        </div>
+                        <div class="message-content" th:text="${message.contents}">Message content goes here...</div>
+                    </div>
+                </div>
+                <p th:if="${messages == null || #lists.isEmpty(messages)}">No messages in this channel yet.</p>
+            </div>
+            <p th:unless="${currentChannel != null}">Please select a channel to view messages.</p>
+            
+            <div th:if="${currentChannel != null}" class="message-form-container">
+                <form class="message-form" 
+                      th:action="@{/user/servers/channels/{channelId}/send(channelId=${currentChannel.id})}" 
+                      method="post">
+                    <div class="form-group message-input">
+                        <label for="contents">Message:</label>
+                        <input type="text" id="contents" name="contents" required>
+                    </div>
+                    <button type="submit">Send</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -17,6 +17,8 @@ import java.util.Set;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
+@Setter
 public class Membership {
 
     @Id
@@ -49,72 +51,5 @@ public class Membership {
     @EqualsAndHashCode.Exclude
     @OneToMany(mappedBy = "participant", cascade = CascadeType.REMOVE)
     private Set<Participation> participations;
-
-
-    public Account getMember() {
-        return member;
-    }
-
-    public void setMember(Account member) {
-        if (member == null) {
-            throw new IllegalArgumentException("Member cannot be null.");
-        }
-        this.member = member;
-    }
-
-    public Server getServer() {
-        return server;
-    }
-
-    public void setServer(Server server) {
-        if (server == null) {
-            throw new IllegalArgumentException("Server cannot be null.");
-        }
-        this.server = server;
-    }
-
-    public LocalDateTime getJoinDate() {
-        return joinDate;
-    }
-
-    public void setJoinDate(LocalDateTime joinDate) {
-        if (joinDate == null) {
-            throw new IllegalArgumentException("Join date cannot be null.");
-        }
-        this.joinDate = joinDate;
-    }
-
-    public LocalDateTime getLeaveDate() {
-        return leaveDate;
-    }
-
-    public void setLeaveDate(LocalDateTime leaveDate) {
-        if (leaveDate != null) {
-            throw new IllegalArgumentException("Leave date already set.");
-        }
-
-        if (leaveDate.isBefore(joinDate)) {
-            throw new IllegalArgumentException("Leave date cannot be before join date.");
-        }
-
-        this.leaveDate = leaveDate;
-    }
-
-    public Role getRole() {
-        return role;
-    }
-
-    public void setRole(Role role) {
-        if (role == null) {
-            throw new IllegalArgumentException("Role cannot be null.");
-        }
-        this.role = role;
-    }
-
-    public Account getUser() {
-        return member;
-    }
-
-
 
 }

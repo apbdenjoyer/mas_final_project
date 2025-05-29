@@ -12,12 +12,16 @@ import org.hibernate.validator.constraints.Length;
 
 import java.util.Set;
 
+
+
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
-@Table(name="users")
+@Getter
+@Setter
+@Table(name="USER_")
 @ToString()
 public class User extends Account{
 
@@ -57,8 +61,4 @@ public class User extends Account{
     @EqualsAndHashCode.Exclude
     private Set<Bot> createdBots;
 
-    @ManyToOne
-    @JoinColumn(name = "voice_channel_id")
-    @OnDelete(action = OnDeleteAction.SET_NULL)
-    private VoiceChannel voiceChannel;
 }

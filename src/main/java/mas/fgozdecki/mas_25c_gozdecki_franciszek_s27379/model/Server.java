@@ -14,6 +14,8 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Getter
+@Setter
 @ToString
 public class Server {
 
@@ -32,95 +34,20 @@ public class Server {
     @OneToMany(mappedBy = "server", cascade = CascadeType.REMOVE)
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
-    private Set<Channel> channels = new HashSet<>();
+    private Set<Channel> channels;
 
     @OneToMany(mappedBy = "server", cascade = CascadeType.REMOVE)
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
-    private Set<Emoji> emojis = new HashSet<>();
+    private Set<Emoji> emojis;
 
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     @OneToMany(mappedBy = "server", cascade = CascadeType.REMOVE)
-    private Set<Membership> memberships = new HashSet<>();
+    private Set<Membership> memberships;
 
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     @OneToMany(mappedBy = "server", cascade = CascadeType.REMOVE)
-    private Set<ServerEvent> events = new HashSet<>();
-
-    public Long getId() {
-        return id;
-    }
-
-    private void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        if (name == null) {
-            throw new IllegalArgumentException("Server name cannot be null");
-        }
-        this.name = name;
-    }
-
-    public User getOwner() {
-        return owner;
-    }
-
-    private void setOwner(User owner) {
-        this.owner = owner;
-    }
-
-    public Set<Channel> getChannels() {
-        return channels;
-    }
-
-    public void setChannels(Set<Channel> channels) {
-        if (channels == null) {
-            throw new IllegalArgumentException("Channels cannot be null");
-        }
-        this.channels = channels;
-    }
-
-    public Set<Emoji> getEmojis() {
-        return emojis;
-    }
-
-    public void setEmojis(Set<Emoji> emojis) {
-        if (emojis == null) {
-            throw new IllegalArgumentException("Emojis cannot be null");
-        }
-        this.emojis = emojis;
-    }
-
-    public Set<Membership> getMemberships() {
-        return memberships;
-    }
-
-    public void setMemberships(Set<Membership> memberships) {
-        if (memberships == null) {
-            throw new IllegalArgumentException("Memberships cannot be null");
-        }
-        this.memberships = memberships;
-    }
-
-    public Set<ServerEvent> getEvents() {
-        return events;
-    }
-
-    public void setEvents(Set<ServerEvent> events) {
-        if (events == null) {
-            throw new IllegalArgumentException("Events cannot be null");
-        }
-        this.events = events;
-    }
-
-    public void addMembership(Membership membership) {
-        this.memberships.add(membership);
-    }
+    private Set<ServerEvent> events;
 }

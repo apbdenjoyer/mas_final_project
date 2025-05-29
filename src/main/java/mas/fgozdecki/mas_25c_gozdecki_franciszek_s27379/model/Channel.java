@@ -15,6 +15,8 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
+@Getter
+@Setter
 @Inheritance(strategy = InheritanceType.JOINED)
 public abstract class Channel {
 

@@ -17,6 +17,8 @@ import java.util.Set;
 @AllArgsConstructor
 @Builder
 @ToString
+@Getter
+@Setter
 public class Emoji {
 
     @Id

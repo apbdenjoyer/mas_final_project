@@ -3,10 +3,8 @@ package mas.fgozdecki.mas_25c_gozdecki_franciszek_s27379.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+
 import java.time.LocalDateTime;
 
 @Entity
@@ -14,6 +12,8 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Getter
+@Setter
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = {"user_id",
         "startDate"}))
 public class Subscription {

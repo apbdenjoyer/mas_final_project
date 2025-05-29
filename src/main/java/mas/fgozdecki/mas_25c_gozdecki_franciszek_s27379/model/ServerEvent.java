@@ -16,6 +16,8 @@ import java.util.Set;
 @AllArgsConstructor
 @Builder
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = {"name", "server_id", "startTime", "endTime"}))
+@Getter
+@Setter
 public class ServerEvent {
 
     @Id
@@ -48,7 +50,6 @@ public class ServerEvent {
     private EventStatus status;
 
     public enum EventStatus {
-        SCHEDULED, ONGOING, COMPLETED}
-
-
+        SCHEDULED, ONGOING, COMPLETED
+    }
 }

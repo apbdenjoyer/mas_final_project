@@ -17,6 +17,8 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
+@Getter
+@Setter
 public class VoiceChannel extends Channel {
 
     @Min(8)
@@ -27,10 +29,4 @@ public class VoiceChannel extends Channel {
     @Min(1)
     @NotNull
     private Integer maxUsers;
-
-    @ToString.Exclude
-    @EqualsAndHashCode.Exclude
-    @OneToMany(mappedBy = "voiceChannel")
-    private Set<User> activeUsers = new HashSet<>();
-
 }

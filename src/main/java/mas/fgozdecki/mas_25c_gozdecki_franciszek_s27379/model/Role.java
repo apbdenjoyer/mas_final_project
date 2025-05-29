@@ -14,6 +14,7 @@ import java.util.Set;
 @Builder
 @Getter
 @Setter
+
 public class Role {
 
     @Id
@@ -35,7 +36,4 @@ public class Role {
     @EqualsAndHashCode.Exclude
     private Set<Membership> users;
 
-    public Integer getAccessLevel() {
-        return accessLevel;
-    }
 }
