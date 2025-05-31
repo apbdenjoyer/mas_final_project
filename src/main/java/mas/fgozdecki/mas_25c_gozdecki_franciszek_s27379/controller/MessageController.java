@@ -11,7 +11,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,7 +18,7 @@ import java.util.Optional;
 @Controller
 @RequestMapping("/user")
 @AllArgsConstructor
-public class ChatController {
+public class MessageController {
 
     private final String CURRENT_USER = "currentUser";
     private final String SERVERS = "servers";
@@ -60,9 +59,8 @@ public class ChatController {
     @GetMapping("")
     @Transactional
     public String getUserHomePage(Model model, HttpSession session,
-                                  @RequestParam(required = false) Long serverId,
-                                  @RequestParam(required = false) Long channelId) {
-
+                              @RequestParam(required = false) Long serverId,
+                              @RequestParam(required = false) Long channelId) {
 
         Long userID = (Long) session.getAttribute(CURRENT_USER+"_ID");
 
@@ -83,45 +81,39 @@ public class ChatController {
         Server selectedServer = null;
 
         if (!servers.isEmpty()) {
-
-            if (serverId != null) {
-                selectedServer =
-                        servers.stream().filter(s -> s.getId().equals(serverId)).findFirst().orElse(null);
-            } else {
-                selectedServer = servers.getFirst();
+        if (serverId != null) {
+            selectedServer =
+                    servers.stream().filter(s -> s.getId().equals(serverId)).findFirst().orElse(null);
+            if (selectedServer != null) {
+                model.addAttribute(CURRENT_SERVER, selectedServer);
             }
         }
-
-        TextChannel selectedChannel = null;
-
-        if (selectedServer != null) {
-            model.addAttribute(CURRENT_SERVER, selectedServer);
-
-            List<TextChannel> channels =
-                    messageService.getTextChannelsFilterByAccessLevel(user, selectedServer);
-
-            model.addAttribute(CHANNELS, channels);
-
-            if (!channels.isEmpty()) {
-                if (channelId != null) {
-                    selectedChannel =
-                            channels.stream().filter(c -> c.getId().equals(channelId)).findFirst().orElse(null);
-                } else {
-                    selectedChannel = channels.getFirst();
-                }
-            }
-        }
-
-        if (selectedChannel != null) {
-            model.addAttribute(CURRENT_CHANNEL, selectedChannel);
-
-            List<Message> messages =
-                    messageService.getMessagesOfTextChannel(user, selectedChannel);
-
-            model.addAttribute(MESSAGES, messages);
-        }
-        return "user/home";
     }
+
+    TextChannel selectedChannel = null;
+
+    if (selectedServer != null) {
+        List<TextChannel> channels =
+                messageService.getTextChannelsFilterByAccessLevel(user, selectedServer);
+
+        model.addAttribute(CHANNELS, channels);
+
+        if (!channels.isEmpty() && channelId != null) {
+            selectedChannel =
+                    channels.stream().filter(c -> c.getId().equals(channelId)).findFirst().orElse(null);
+            if (selectedChannel != null) {
+                model.addAttribute(CURRENT_CHANNEL, selectedChannel);
+
+                List<Message> messages =
+                        messageService.getMessagesOfTextChannel(user, selectedChannel);
+                model.addAttribute(MESSAGES, messages);
+
+            }
+        }
+    }
+
+    return "user/home";
+}
 
     @PostMapping("/servers/channels/{channelId}/send")
     public String sendMessage(Model model, HttpSession session,

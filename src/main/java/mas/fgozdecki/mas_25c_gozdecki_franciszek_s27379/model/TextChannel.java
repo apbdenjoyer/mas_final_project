@@ -23,9 +23,6 @@ public class TextChannel extends Channel {
             "textchannel_id"))
     private Set<String> blacklist;
 
-    @Min(0)
-    private Integer slowmode;
-
     @OneToMany(mappedBy = "channel", cascade = CascadeType.REMOVE)
     @ToString.Exclude
     @EqualsAndHashCode.Exclude

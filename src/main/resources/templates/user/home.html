@@ -122,7 +122,7 @@
         .message-content {
             margin-top: 5px;
         }
-        
+
         .message-form {
             margin-top: 20px;
             display: flex;
@@ -137,14 +137,9 @@
     </style>
 </head>
 <body>
-    <h1>Chat Dashboard</h1>
-    
-    <!-- Display error message if any -->
-    <div class="error" th:if="${error}" th:text="${error}"></div>
-    
-    <!-- User info display -->
     <div th:if="${currentUser}" class="user-info">
-        <p>Logged in as: <span th:text="${currentUser.login}">Username</span></p>
+        <p>Logged in as:
+            <span th:text="${currentUser.login}">Username</span></p>
     </div>
     
      <div class="container">
@@ -157,8 +152,7 @@
                        th:text="${server.name}">Server Name</a>
                 </li>
             </ul>
-            <p th:if="${servers == null || #lists.isEmpty(servers)}">No servers available</p>
-            
+
             <div th:if="${currentServer != null}">
                 <h2>Channels</h2>
                 <ul class="channel-list" th:if="${channels != null && !#lists.isEmpty(channels)}">
@@ -168,13 +162,11 @@
                            th:text="${channel.name}">Channel Name</a>
                     </li>
                 </ul>
-                <p th:if="${channels == null || #lists.isEmpty(channels)}">No channels available</p>
             </div>
         </div>
         
         <div class="main-content">
             <h2 th:if="${currentChannel != null}" th:text="${'#' + currentChannel.name}">Channel Name</h2>
-            <h2 th:unless="${currentChannel != null}">Select a channel</h2>
 
             <div class="messages" th:if="${currentChannel != null}">
                 <div th:if="${messages != null && !#lists.isEmpty(messages)}">
@@ -183,13 +175,10 @@
                             <span class="message-author" th:text="${message.author.login}">Username</span>
                             <span class="message-time" th:text="${#temporals.format(message.createdAt, 'dd MMM yyyy, HH:mm')}">Time</span>
                         </div>
-                        <div class="message-content" th:text="${message.contents}">Message content goes here...</div>
+                        <div class="message-content" th:text="${message.contents}">Message content</div>
                     </div>
                 </div>
-                <p th:if="${messages == null || #lists.isEmpty(messages)}">No messages in this channel yet.</p>
             </div>
-            <p th:unless="${currentChannel != null}">Please select a channel to view messages.</p>
-            
             <div th:if="${currentChannel != null}" class="message-form-container">
                 <form class="message-form" 
                       th:action="@{/user/servers/channels/{channelId}/send(channelId=${currentChannel.id})}" 
