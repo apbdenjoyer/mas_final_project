@@ -24,8 +24,6 @@ public class DataInitializer implements ApplicationRunner {
     private final VoiceChannelRepository voiceChannelRepository;
     private final EmojiRepository emojiRepository;
     private final ReactionRepository reactionRepository;
-    private final ServerEventRepository serverEventRepository;
-    private final ParticipationRepository participationRepository;
     private final SubscriptionRepository subscriptionRepository;
     private final BotRepository botRepository;
 
@@ -308,62 +306,6 @@ public class DataInitializer implements ApplicationRunner {
         reactionRepository.save(reaction2);
         reactionRepository.save(reaction3);
 
-
-        ServerEvent event1 = ServerEvent.builder()
-                .name("event #1")
-                .description("first event")
-                .server(server1)
-                .startTime(LocalDateTime.now().plusDays(1))
-                .endTime(LocalDateTime.now().plusDays(2))
-                .status(ServerEvent.EventStatus.SCHEDULED)
-                .build();
-
-        ServerEvent event2 = ServerEvent.builder()
-                .name("event #2")
-                .description("second event")
-                .server(server1)
-                .startTime(LocalDateTime.now().plusHours(12))
-                .endTime(LocalDateTime.now().plusHours(16))
-                .status(ServerEvent.EventStatus.SCHEDULED)
-                .build();
-
-        ServerEvent event3 = ServerEvent.builder()
-                .name("event #3")
-                .description("third event")
-                .server(server2)
-                .startTime(LocalDateTime.now().plusDays(3))
-                .endTime(LocalDateTime.now().plusDays(4))
-                .status(ServerEvent.EventStatus.SCHEDULED)
-                .build();
-
-        serverEventRepository.save(event1);
-        serverEventRepository.save(event2);
-        serverEventRepository.save(event3);
-
-        
-        Participation participation1 = Participation.builder()
-                .participant(membership1)
-                .event(event1)
-                .signDate(LocalDateTime.now().minusDays(2))
-                .build();
-
-        Participation participation2 = Participation.builder()
-                .participant(membership1)
-                .event(event2)
-                .signDate(LocalDateTime.now().minusDays(1))
-                .build();
-
-        Participation participation3 = Participation.builder()
-                .participant(membership2)
-                .event(event3)
-                .signDate(LocalDateTime.now())
-                .build();
-
-        participationRepository.save(participation1);
-        participationRepository.save(participation2);
-        participationRepository.save(participation3);
-
-        
         Subscription subscription1 = Subscription.builder()
                 .user(user2)
                 .level(Subscription.SubscriptionLevel.PRO)
@@ -392,8 +334,6 @@ public class DataInitializer implements ApplicationRunner {
                 voiceChannelRepository.count() > 0 ||
                 emojiRepository.count() > 0 ||
                 reactionRepository.count() > 0 ||
-                serverEventRepository.count() > 0 ||
-                participationRepository.count() > 0 ||
                 subscriptionRepository.count() > 0 ||
                 botRepository.count() > 0;
     }

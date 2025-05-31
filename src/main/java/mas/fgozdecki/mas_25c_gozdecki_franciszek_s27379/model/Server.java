@@ -46,8 +46,4 @@ public class Server {
     @OneToMany(mappedBy = "server", cascade = CascadeType.REMOVE)
     private Set<Membership> memberships;
 
-    @ToString.Exclude
-    @EqualsAndHashCode.Exclude
-    @OneToMany(mappedBy = "server", cascade = CascadeType.REMOVE)
-    private Set<ServerEvent> events;
 }

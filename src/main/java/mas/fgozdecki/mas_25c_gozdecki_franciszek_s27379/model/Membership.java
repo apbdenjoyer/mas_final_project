@@ -47,9 +47,5 @@ public class Membership {
     @EqualsAndHashCode.Exclude
     private Role role;
 
-    @ToString.Exclude
-    @EqualsAndHashCode.Exclude
-    @OneToMany(mappedBy = "participant", cascade = CascadeType.REMOVE)
-    private Set<Participation> participations;
 
 }

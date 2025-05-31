@@ -4,15 +4,18 @@ import jakarta.servlet.http.HttpSession;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import mas.fgozdecki.mas_25c_gozdecki_franciszek_s27379.model.*;
+import mas.fgozdecki.mas_25c_gozdecki_franciszek_s27379.repository.MessageRepository;
 import mas.fgozdecki.mas_25c_gozdecki_franciszek_s27379.repository.TextChannelRepository;
 import mas.fgozdecki.mas_25c_gozdecki_franciszek_s27379.repository.UserRepository;
-import mas.fgozdecki.mas_25c_gozdecki_franciszek_s27379.service.MessageService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.w3c.dom.Text;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 
 @Controller
@@ -32,7 +35,7 @@ public class MessageController {
     private final UserRepository userRepository;
 
     private final TextChannelRepository textChannelRepository;
-    private final MessageService messageService;
+    private final MessageRepository messageRepository;
 
     @GetMapping("/login")
     public String getLoginPage() {
@@ -75,10 +78,10 @@ public class MessageController {
         }
 
         model.addAttribute(CURRENT_USER, user);
-        List<Server> servers = messageService.getServersJoinedByAccount(user);
+        List<Server> servers = getServersJoinedByAccount(user);
         model.addAttribute(SERVERS, servers);
 
-        Server selectedServer = null;
+        Server selectedServer;
 
         if (!servers.isEmpty()) {
         if (serverId != null) {
@@ -87,14 +90,18 @@ public class MessageController {
             if (selectedServer != null) {
                 model.addAttribute(CURRENT_SERVER, selectedServer);
             }
+        } else {
+            selectedServer = null;
         }
-    }
+        } else {
+            selectedServer = null;
+        }
 
-    TextChannel selectedChannel = null;
+        TextChannel selectedChannel = null;
 
     if (selectedServer != null) {
-        List<TextChannel> channels =
-                messageService.getTextChannelsFilterByAccessLevel(user, selectedServer);
+
+        List<TextChannel> channels = getTextChannels(user, selectedServer);
 
         model.addAttribute(CHANNELS, channels);
 
@@ -104,8 +111,9 @@ public class MessageController {
             if (selectedChannel != null) {
                 model.addAttribute(CURRENT_CHANNEL, selectedChannel);
 
-                List<Message> messages =
-                        messageService.getMessagesOfTextChannel(user, selectedChannel);
+
+                List<Message> messages = getMessages(selectedChannel, user);
+
                 model.addAttribute(MESSAGES, messages);
 
             }
@@ -114,6 +122,46 @@ public class MessageController {
 
     return "user/home";
 }
+
+    /* HELPERS */
+
+
+    private static List<TextChannel> getTextChannels(User user, Server selectedServer) {
+        Membership membership =
+                user.getMemberships().stream()
+                        .filter(m-> m.getLeaveDate() == null)
+                        .filter(m -> m.getServer().equals(selectedServer))
+                        .findFirst().orElseThrow();
+
+        int access;
+        if (membership.getRole() == null) {
+            access = 0;
+        }else if (selectedServer.getOwner().equals(user)) {
+            access=Integer.MAX_VALUE;
+        } else {
+            access = membership.getRole().getAccessLevel();
+        }
+
+        return selectedServer.getChannels().stream()
+                .filter(c -> c instanceof TextChannel)
+                .map(c -> (TextChannel) c)
+                .filter(c -> c.getRequiredAccessLevel() <= access)
+                .toList();
+    }
+
+    private static List<Message> getMessages(TextChannel selectedChannel, User user) {
+        List<Message> messages;
+        if(selectedChannel.getServer().getOwner().equals(user)) {
+            messages = selectedChannel.getMessages().stream()
+                    .sorted(Comparator.comparing(Message::getCreatedAt)).toList();
+        } else {
+            messages= selectedChannel.getMessages().stream()
+                    .filter(m -> m.getStatus()!=MessageStatus.SHADOWED)
+                    .sorted(Comparator.comparing(Message::getCreatedAt))
+                    .toList();
+        }
+        return messages;
+    }
 
     @PostMapping("/servers/channels/{channelId}/send")
     public String sendMessage(Model model, HttpSession session,
@@ -139,22 +187,25 @@ public class MessageController {
         }
 
         try {
-        // Get the channel by ID from the repository
             TextChannel channel = textChannelRepository.findById(channelId).orElse(null);
 
             if (channel == null) {
                 return "redirect:/user";
             }
 
-            Message message = messageService.createMessage(user, channel, contents);
+            Message message = Message.builder()
+                    .channel(channel)
+                    .author(user)
+                    .contents(contents)
+                    .status(MessageStatus.DRAFT)
+                    .build();
 
-            if (messageService.isContentBlacklistedInChannel(channel, contents)) {
+            if (isContentBlacklistedInChannel(channel, contents)) {
                 message.setStatus(MessageStatus.SHADOWED);
             } else {
                 message.setStatus(MessageStatus.APPROVED);
             }
-
-            messageService.saveMessage(message);
+            messageRepository.save(message);
 
             return "redirect:/user?serverId=" + channel.getServer().getId() + "&channelId=" + channelId;
 
@@ -162,17 +213,33 @@ public class MessageController {
             return "redirect:/user";
         }
     }
-/*
-    @PostMapping("/user/servers/channels/{channelId}/{msgId}/edit")
-    public String editMessage(Model model, @ModelAttribute User user,
-                              @PathVariable Long channelId,
-                              @PathVariable Long msgId) {
-        TextChannel channel = messageService.getTextChannelById(channelId);
-        Optional<Message> message =
-                channel.getMessages().stream().filter(c -> c.getId()==msgId).findFirst();
 
-        if (message.isEmpty()) {
-            *//* idk*//*
+    private List<Membership> getActiveMembershipsOfAccount(Account account) {
+        return account.getMemberships().stream().filter(m -> m.getLeaveDate() == null).toList();
+    }
+
+    private List<Server> getServersJoinedByAccount(Account account) {
+        List<Membership> memberships =
+                getActiveMembershipsOfAccount(account);
+
+        return memberships.stream().map(Membership::getServer).toList();
+    }
+
+    private boolean isContentBlacklistedInChannel(TextChannel channel,
+                                                 String contents) {
+
+        Set<String> blacklist = channel.getBlacklist();
+
+        if (blacklist.isEmpty()) {
+            return false;
         }
-    }*/
+
+        String contentsMerged = contents.toLowerCase().replaceAll("\\s+", " ");
+        for (String word : blacklist) {
+            if (contentsMerged.contains(word)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
