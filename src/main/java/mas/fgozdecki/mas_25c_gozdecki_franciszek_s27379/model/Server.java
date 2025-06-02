@@ -3,10 +3,8 @@ package mas.fgozdecki.mas_25c_gozdecki_franciszek_s27379.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
+import mas.fgozdecki.mas_25c_gozdecki_franciszek_s27379.model.validator.ValidServerCreationLimit;
 import org.hibernate.validator.constraints.Length;
-
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -17,6 +15,7 @@ import java.util.Set;
 @Getter
 @Setter
 @ToString
+@ValidServerCreationLimit
 public class Server {
 
     @Id
@@ -40,6 +39,11 @@ public class Server {
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     private Set<Emoji> emojis;
+
+    @OneToMany(mappedBy = "server", cascade = CascadeType.REMOVE)
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    private Set<Role> roles;
 
     @ToString.Exclude
     @EqualsAndHashCode.Exclude

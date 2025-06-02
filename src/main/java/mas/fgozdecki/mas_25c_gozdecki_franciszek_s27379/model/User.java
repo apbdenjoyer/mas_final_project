@@ -6,14 +6,13 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.validator.constraints.Length;
 
 import java.util.Set;
 
 
 
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Data
 @NoArgsConstructor
@@ -56,7 +55,7 @@ public class User extends Account{
     @EqualsAndHashCode.Exclude
     private Set<Reaction> reactions;
 
-    @OneToMany(mappedBy = "author", cascade=CascadeType.REMOVE, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "maintainer", cascade=CascadeType.REMOVE, fetch = FetchType.LAZY)
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     private Set<Bot> createdBots;

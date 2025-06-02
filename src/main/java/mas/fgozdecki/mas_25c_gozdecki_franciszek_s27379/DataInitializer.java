@@ -51,18 +51,37 @@ public class DataInitializer implements ApplicationRunner {
         userRepository.save(user1);
         userRepository.save(user2);
 
-        
+        Subscription subscription1 = Subscription.builder()
+                .user(user1)
+                .level(SubscriptionLevel.NONE)
+                .startDate(LocalDateTime.now().minusDays(30))
+                .endDate(LocalDateTime.now().plusDays(60))
+                .build();
+
+        Subscription subscription2 = Subscription.builder()
+                .user(user2)
+                .level(SubscriptionLevel.PRO)
+                .startDate(LocalDateTime.now().minusDays(60))
+                .endDate(LocalDateTime.now().plusDays(30))
+                .build();
+
+
+        subscriptionRepository.save(subscription1);
+        subscriptionRepository.save(subscription2);
+
+
+
         Bot bot1 = Bot.builder()
                 .login("bot123")
                 .registrationDate(LocalDateTime.now())
-                .author(user2)
+                .maintainer(user2)
                 .token("abc123token456")
                 .build();
 
         Bot bot2 = Bot.builder()
                 .login("bot456")
                 .registrationDate(LocalDateTime.now())
-                .author(user2)
+                .maintainer(user2)
                 .token("xyz789token321")
                 .build();
 
@@ -305,24 +324,7 @@ public class DataInitializer implements ApplicationRunner {
         reactionRepository.save(reaction1);
         reactionRepository.save(reaction2);
         reactionRepository.save(reaction3);
-
-        Subscription subscription1 = Subscription.builder()
-                .user(user2)
-                .level(Subscription.SubscriptionLevel.PRO)
-                .startDate(LocalDateTime.now().minusDays(60))
-                .endDate(LocalDateTime.now().plusDays(30))
-                .build();
-
-        Subscription subscription2 = Subscription.builder()
-                .user(user1)
-                .level(Subscription.SubscriptionLevel.CLASSIC)
-                .startDate(LocalDateTime.now().minusDays(30))
-                .endDate(LocalDateTime.now().plusDays(60))
-                .build();
-
-        subscriptionRepository.save(subscription1);
-        subscriptionRepository.save(subscription2);
-    }
+}
 
     private boolean isDatabasePopulated() {
         return userRepository.count() > 0 ||

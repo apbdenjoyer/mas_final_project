@@ -3,11 +3,11 @@ package mas.fgozdecki.mas_25c_gozdecki_franciszek_s27379.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
+import mas.fgozdecki.mas_25c_gozdecki_franciszek_s27379.model.validator.ValidJoinDate;
+import mas.fgozdecki.mas_25c_gozdecki_franciszek_s27379.model.validator.ValidLeaveDate;
+import mas.fgozdecki.mas_25c_gozdecki_franciszek_s27379.model.validator.ValidServerLimit;
 
 import java.time.LocalDateTime;
-import java.util.Set;
 
 @Entity
 @Data
@@ -15,10 +15,13 @@ import java.util.Set;
         "server_id", "joinDate"}))
 @ToString()
 @Builder
-@NoArgsConstructor
-@AllArgsConstructor
+@NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
+@AllArgsConstructor(access = lombok.AccessLevel.PROTECTED)
 @Getter
 @Setter
+@ValidJoinDate
+@ValidLeaveDate
+@ValidServerLimit
 public class Membership {
 
     @Id
@@ -46,6 +49,5 @@ public class Membership {
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     private Role role;
-
 
 }

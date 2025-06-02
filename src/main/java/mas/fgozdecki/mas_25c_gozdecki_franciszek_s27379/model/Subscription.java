@@ -23,28 +23,24 @@ public class Subscription {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-
-    public enum SubscriptionLevel {
-        NONE(25, 0.00),
-        CLASSIC(50, 19.99),
-        PRO(250, 29.99);
-
-        SubscriptionLevel(Integer serverCountLimit, Double monthlyPrice) {
-            this.serverCountLimit = serverCountLimit;
-            this.monthlyPrice = monthlyPrice;
-        }
-
-        private final Integer serverCountLimit;
-        private final Double monthlyPrice;
-    }
-
     @NotNull
     @Enumerated(EnumType.STRING)
     private SubscriptionLevel level;
 
+    @Transient
+    public Integer getServerLimit() {
+        return level != null ? level.getServerCountLimit() : SubscriptionLevel.NONE.getServerCountLimit();
+    }
+
+    @Transient
+    public Double getMonthlyPrice() {
+        return level != null ? level.getMonthlyPrice() :
+                SubscriptionLevel.NONE.getMonthlyPrice();
+    }
+
+
     @NotNull
     private LocalDateTime startDate;
-
     private LocalDateTime endDate;
 
     @NotNull
@@ -53,3 +49,5 @@ public class Subscription {
             false, updatable = false)
     private User user;
 }
+
+
