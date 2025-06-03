@@ -19,9 +19,7 @@ import java.util.Optional;
 public class UserController {
 
 
-    /* used for accessing the logged-in user*/
     private final UserRepository userRepository;
-
     private final MessageService messageService;
 
     @Autowired
@@ -119,9 +117,7 @@ public class UserController {
             return null;
         }
 
-        User user = userRepository.findById(userID).orElse(null);
-
-        return user;
+        return userRepository.findById(userID).orElse(null);
     }
 
 
