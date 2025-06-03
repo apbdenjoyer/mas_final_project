@@ -21,16 +21,6 @@ public class MessageService {
         this.messageRepository = messageRepository;
     }
 
-    public List<Membership> getActiveMembershipsOfAccount(Account account) {
-        return account.getMemberships().stream().filter(m -> m.getLeaveDate() == null).toList();
-    }
-
-    public List<Server> getServersJoinedByAccount(Account account) {
-        List<Membership> memberships =
-                getActiveMembershipsOfAccount(account);
-
-        return memberships.stream().map(Membership::getServer).toList();
-    }
 
     public boolean isContentBlacklistedInChannel(TextChannel channel,
                                                   String contents) {
@@ -81,13 +71,14 @@ public class MessageService {
                 .toList();
     }
 
-    public List<Message> getMessages(TextChannel selectedChannel, User user) {
+    public List<Message> getMessagesFiltered(TextChannel channel,
+                                             Account account) {
         List<Message> messages;
-        if(selectedChannel.getServer().getOwner().equals(user)) {
-            messages = selectedChannel.getMessages().stream()
+        if(channel.getServer().getOwner().equals(account)) {
+            messages = channel.getMessages().stream()
                     .sorted(Comparator.comparing(Message::getCreatedAt)).toList();
         } else {
-            messages= selectedChannel.getMessages().stream()
+            messages= channel.getMessages().stream()
                     .filter(m -> m.getStatus()!=MessageStatus.SHADOWED)
                     .sorted(Comparator.comparing(Message::getCreatedAt))
                     .toList();
@@ -96,10 +87,10 @@ public class MessageService {
     }
 
     public Message createMessage(String contents, TextChannel channel,
-                               User user) {
+                               Account account) {
         return Message.builder()
                 .channel(channel)
-                .author(user)
+                .author(account)
                 .contents(contents)
                 .status(MessageStatus.DRAFT)
                 .build();
