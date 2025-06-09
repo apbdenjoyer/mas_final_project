@@ -1,4 +1,4 @@
-package mas.fgozdecki.mas_25c_gozdecki_franciszek_s27379.model.validator;
+package mas.fgozdecki.mas_25c_gozdecki_franciszek_s27379.validator;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;

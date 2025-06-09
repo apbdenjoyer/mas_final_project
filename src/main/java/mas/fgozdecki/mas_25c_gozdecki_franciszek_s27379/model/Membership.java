@@ -3,9 +3,9 @@ package mas.fgozdecki.mas_25c_gozdecki_franciszek_s27379.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
-import mas.fgozdecki.mas_25c_gozdecki_franciszek_s27379.model.validator.ValidJoinDate;
-import mas.fgozdecki.mas_25c_gozdecki_franciszek_s27379.model.validator.ValidLeaveDate;
-import mas.fgozdecki.mas_25c_gozdecki_franciszek_s27379.model.validator.ValidServerLimit;
+import mas.fgozdecki.mas_25c_gozdecki_franciszek_s27379.validator.ValidJoinDate;
+import mas.fgozdecki.mas_25c_gozdecki_franciszek_s27379.validator.ValidLeaveDate;
+import mas.fgozdecki.mas_25c_gozdecki_franciszek_s27379.validator.ValidServerLimit;
 
 import java.time.LocalDateTime;
 

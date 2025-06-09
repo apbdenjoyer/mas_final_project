@@ -3,7 +3,7 @@ package mas.fgozdecki.mas_25c_gozdecki_franciszek_s27379.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
-import mas.fgozdecki.mas_25c_gozdecki_franciszek_s27379.model.validator.ValidServerCreationLimit;
+import mas.fgozdecki.mas_25c_gozdecki_franciszek_s27379.validator.ValidServerCreationLimit;
 import org.hibernate.validator.constraints.Length;
 import java.util.Set;
 

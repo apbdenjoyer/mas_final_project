@@ -1,4 +1,4 @@
-package mas.fgozdecki.mas_25c_gozdecki_franciszek_s27379.model.validator;
+package mas.fgozdecki.mas_25c_gozdecki_franciszek_s27379.validator;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
@@ -6,8 +6,6 @@ import mas.fgozdecki.mas_25c_gozdecki_franciszek_s27379.model.Membership;
 import mas.fgozdecki.mas_25c_gozdecki_franciszek_s27379.model.Subscription;
 import mas.fgozdecki.mas_25c_gozdecki_franciszek_s27379.model.SubscriptionLevel;
 import mas.fgozdecki.mas_25c_gozdecki_franciszek_s27379.model.User;
-import mas.fgozdecki.mas_25c_gozdecki_franciszek_s27379.service.MembershipService;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Set;
 import java.util.stream.Collectors;
