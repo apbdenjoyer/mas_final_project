@@ -21,7 +21,14 @@ public class MessageService {
         this.messageRepository = messageRepository;
     }
 
-
+    /**
+     * Checks if the content of a message contains any blacklisted words for
+     * a given channel.
+     *
+     * @param channel The TextChannel to check against its blacklist
+     * @param contents The message contents to check
+     * @return true if the content contains blacklisted words, false otherwise
+     */
     public boolean isContentBlacklistedInChannel(TextChannel channel,
                                                   String contents) {
 
@@ -48,6 +55,14 @@ public class MessageService {
         messageRepository.save(message);
     }
 
+    /**
+     * Retrieves a list of TextChannels that the user has access to in the specified server.
+     * The channels are filtered based on the user's role and access level.
+     *
+     * @param user The user requesting access to channels
+     * @param selectedServer The server containing the channels
+     * @return A list of TextChannels that the user can access
+     */
     public List<TextChannel> getTextChannelsFilteredByAccess(User user, Server selectedServer) {
         Membership membership =
                 user.getMemberships().stream()
@@ -72,9 +87,9 @@ public class MessageService {
     }
 
     public List<Message> getMessagesFiltered(TextChannel channel,
-                                             Account account) {
+                                             User user) {
         List<Message> messages;
-        if(channel.getServer().getOwner().equals(account)) {
+        if(channel.getServer().getOwner().equals(user)) {
             messages = channel.getMessages().stream()
                     .sorted(Comparator.comparing(Message::getCreatedAt)).toList();
         } else {
@@ -86,11 +101,20 @@ public class MessageService {
         return messages;
     }
 
+    /**
+     * Creates a new message with the provided content, channel, and author.
+     * The message is initialized with DRAFT status and needs to be saved to persist.
+     *
+     * @param contents The text content of the message
+     * @param channel The TextChannel where the message will be posted
+     * @param user The user who is creating the message
+     * @return A new Message instance with DRAFT status
+     */
     public Message createMessage(String contents, TextChannel channel,
-                               Account account) {
+                               User user) {
         return Message.builder()
                 .channel(channel)
-                .author(account)
+                .author(user)
                 .contents(contents)
                 .status(MessageStatus.DRAFT)
                 .build();

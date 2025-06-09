@@ -183,6 +183,7 @@
                 <form class="message-form" 
                       th:action="@{/user/servers/channels/{channelId}/send(channelId=${currentChannel.id})}" 
                       method="post">
+
                     <div class="form-group message-input">
                         <label for="contents">Message:</label>
                         <input type="text" id="contents" name="contents" required>

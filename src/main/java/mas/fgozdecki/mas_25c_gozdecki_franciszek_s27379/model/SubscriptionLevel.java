@@ -1,5 +1,6 @@
 package mas.fgozdecki.mas_25c_gozdecki_franciszek_s27379.model;
 
+
 import jakarta.validation.constraints.Min;
 import lombok.Getter;
 

@@ -14,46 +14,7 @@ import java.util.stream.Collectors;
 @Service
 public class MembershipService {
 
-    private final MembershipRepository membershipRepository;
-
-    @Autowired
-    public MembershipService(MembershipRepository membershipRepository) {
-        this.membershipRepository = membershipRepository;
-    }
-
-    @Transactional
-    public void  createMembership(@NotNull Account account, @NotNull
-    Server server, Role role) {
-
-
-        /*If I was implementing actual functionality for bots, joining
-        servers/etc would be done through some sort of bot author view*/
-        if (account instanceof Bot) {
-            membershipRepository.save(Membership.builder()
-                    .member(account)
-                    .server(server)
-                    .joinDate(LocalDateTime.now())
-                    .role(role)
-                    .build());
-            return;
-        }
-
-        User user = (User) account;
-
-        if (!canJoinMoreServers(user)) {
-            return;
-        }
-
-        membershipRepository.save(Membership.builder()
-                .member(account)
-                .server(server)
-                .joinDate(LocalDateTime.now())
-                .role(role)
-                .build());
-    }
-
-
-    public static boolean canJoinMoreServers(User user) {
+    public boolean canJoinMoreServers(User user) {
         if (user.getSubscriptions() == null) {
             return user.getMemberships() == null ||
                     user.getMemberships().stream()

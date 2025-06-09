@@ -50,4 +50,6 @@ public class Server {
     @OneToMany(mappedBy = "server", cascade = CascadeType.REMOVE)
     private Set<Membership> memberships;
 
+
+
 }

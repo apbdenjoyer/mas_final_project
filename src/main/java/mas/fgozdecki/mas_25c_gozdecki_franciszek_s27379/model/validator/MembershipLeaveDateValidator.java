@@ -12,6 +12,19 @@ public class MembershipLeaveDateValidator implements ConstraintValidator<ValidLe
         ConstraintValidator.super.initialize(constraintAnnotation);
     }
 
+    /**
+     * Validates that the leave date of the membership meets the required criteria.
+     *
+     * A membership passes validation if:
+     * 1. The leave date is null (indicating an active membership), or
+     * 2, The leave date is null (indicating an active membership), or
+     * 3. The leave date is not before the join date AND not in the future
+     *
+     *
+     * @param membership the membership object being validated
+     * @param constraintValidatorContext context in which the constraint is evaluated
+     * @return true if the leave date is valid or null, false otherwise
+     */
     @Override
     public boolean isValid(Membership membership, ConstraintValidatorContext constraintValidatorContext) {
         if (membership.getLeaveDate() == null) {

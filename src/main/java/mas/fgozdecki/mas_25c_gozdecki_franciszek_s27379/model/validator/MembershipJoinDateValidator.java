@@ -12,6 +12,14 @@ public class MembershipJoinDateValidator implements ConstraintValidator<ValidJoi
         ConstraintValidator.super.initialize(constraintAnnotation);
     }
 
+    /**
+     * Validates that the join date of the membership is not in the future.
+     *
+     * @param membership the membership object being validated
+     * @param constraintValidatorContext context in which the constraint is evaluated
+     * @return true if the join date is valid (not in the future), false
+     * otherwise
+     */
     @Override
     public boolean isValid(Membership membership, ConstraintValidatorContext constraintValidatorContext) {
         return !(membership.getJoinDate().isAfter(LocalDateTime.now()));
