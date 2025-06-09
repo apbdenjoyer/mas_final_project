@@ -33,7 +33,7 @@ public class DataInitializer implements ApplicationRunner {
         if (isDatabasePopulated()) {
             return;
         }
-        
+
         User user1 = User.builder()
                 .login("user1")
                 .registrationDate(LocalDateTime.now())
@@ -51,6 +51,7 @@ public class DataInitializer implements ApplicationRunner {
         userRepository.save(user1);
         userRepository.save(user2);
 
+
         Subscription subscription1 = Subscription.builder()
                 .user(user1)
                 .level(SubscriptionLevel.NONE)
@@ -65,10 +66,8 @@ public class DataInitializer implements ApplicationRunner {
                 .endDate(LocalDateTime.now().plusDays(30))
                 .build();
 
-
         subscriptionRepository.save(subscription1);
         subscriptionRepository.save(subscription2);
-
 
 
         Bot bot1 = Bot.builder()
@@ -98,7 +97,7 @@ public class DataInitializer implements ApplicationRunner {
         botRepository.save(bot1);
         botRepository.save(bot2);
 
-        
+
         Server server1 = Server.builder()
                 .name(user2.getLogin()+"'s server")
                 .owner(user2)
@@ -112,7 +111,7 @@ public class DataInitializer implements ApplicationRunner {
         serverRepository.save(server1);
         serverRepository.save(server2);
 
-        
+
         Role adminRole = Role.builder()
                 .server(server1)
                 .name("Admin")
@@ -134,7 +133,7 @@ public class DataInitializer implements ApplicationRunner {
         roleRepository.save(moderatorRole);
         roleRepository.save(memberRole);
 
-        
+
         Membership membership1 = Membership.builder()
                 .member(user1)
                 .server(server1)
@@ -247,7 +246,7 @@ public class DataInitializer implements ApplicationRunner {
         voiceChannelRepository.save(voiceChannel2);
         voiceChannelRepository.save(voiceChannel3);
 
-        
+
         Message message1 = Message.builder()
                 .contents("Hello!")
                 .author(user2)
@@ -276,7 +275,7 @@ public class DataInitializer implements ApplicationRunner {
         messageRepository.save(message2);
         messageRepository.save(message3);
 
-        
+
         Emoji emoji1 = Emoji.builder()
                 .server(server1)
                 .name("smiley")
@@ -299,7 +298,7 @@ public class DataInitializer implements ApplicationRunner {
         emojiRepository.save(emoji2);
         emojiRepository.save(emoji3);
 
-        
+
         Reaction reaction1 = Reaction.builder()
                 .emoji(emoji1)
                 .message(message1)

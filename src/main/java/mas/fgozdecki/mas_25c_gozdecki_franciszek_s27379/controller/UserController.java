@@ -4,7 +4,6 @@ import jakarta.servlet.http.HttpSession;
 import jakarta.transaction.Transactional;
 import mas.fgozdecki.mas_25c_gozdecki_franciszek_s27379.model.*;
 import mas.fgozdecki.mas_25c_gozdecki_franciszek_s27379.repository.UserRepository;
-import mas.fgozdecki.mas_25c_gozdecki_franciszek_s27379.service.AccountService;
 import mas.fgozdecki.mas_25c_gozdecki_franciszek_s27379.service.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -20,16 +19,12 @@ import java.util.Optional;
 public class UserController {
 
 
-    /* used for accessing the logged-in user*/
     private final UserRepository userRepository;
-
-    private final AccountService accountService;
     private final MessageService messageService;
 
     @Autowired
-    public UserController(UserRepository userRepository, AccountService accountService, MessageService messageService) {
+    public UserController(UserRepository userRepository, MessageService messageService) {
         this.userRepository = userRepository;
-        this.accountService = accountService;
         this.messageService = messageService;
     }
 
@@ -68,7 +63,7 @@ public class UserController {
         model.addAttribute("currentUser", user);
 
 
-        List<Server> servers = accountService.getServersJoined(user);
+        List<Server> servers = messageService.getServersJoinedByAccount(user);
         model.addAttribute("servers", servers);
 
         Server selectedServer;
@@ -104,7 +99,7 @@ public class UserController {
 
 
                     List<Message> messages =
-                            messageService.getMessagesFiltered(selectedChannel, user);
+                            messageService.getMessages(selectedChannel, user);
 
                     model.addAttribute("messages", messages);
 
@@ -122,9 +117,7 @@ public class UserController {
             return null;
         }
 
-        User user = userRepository.findById(userID).orElse(null);
-
-        return user;
+        return userRepository.findById(userID).orElse(null);
     }
 
 
